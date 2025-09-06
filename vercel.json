@@ -1,31 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "backend.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/backend.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "env": {
-    "PYTHONPATH": "/var/task"
-  },
-  "functions": {
-    "backend.py": {
-      "maxDuration": 30
-    }
-  }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/backend" }
+  ]
 }
