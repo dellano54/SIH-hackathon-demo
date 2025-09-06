@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroTech Pro - Smart Agricultural Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #F57C00;
+            --text-dark: #263238;
+            --text-medium: #546E7A;
+            --text-light: #78909C;
+            --bg-main: #F9FBF9;
+            --bg-card: #FFFFFF;
+            --border: #E0E0E0;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --info: #2196F3;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-main);
+            color: var(--text-medium);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-content h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-content h1 i {
+            color: var(--secondary);
+            font-size: 32px;
+        }
+
+        .header-content p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            display: flex;
+            background: #F1F8E9;
+            border-radius: 50px;
+            padding: 4px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .language-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 50px;
+            background: transparent;
+            color: var(--text-medium);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 24px;
+            align-items: start;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .refresh-btn {
+            background: #E8F5E9;
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #C8E6C9;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .sensor-card {
+            background: linear-gradient(135deg, #F9FBF9 0%, #FFFFFF 100%);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sensor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sensor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+        }
+
+        .sensor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .sensor-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #E8F5E9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .sensor-info {
+            text-align: right;
+        }
+
+        .sensor-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .sensor-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .sensor-unit {
+            color: var(--text-light);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .sensor-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .status-optimal {
+            background: #E8F5E9;
+            color: var(--success);
+        }
+
+        .status-warning {
+            background: #FFF8E1;
+            color: var(--warning);
+        }
+
+        .status-critical {
+            background: #FFEBEE;
+            color: var(--danger);
+        }
+
+        .sensor-progress {
+            margin-top: 16px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .progress-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #F5F5F5;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Chat Section Styles */
+        .chat-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 600px;
+            max-height: 800px;
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .chat-header i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .chat-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--text-light);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.assistant {
+            background: #F1F8E9;
+            color: var(--text-dark);
+            margin-right: auto;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.has-audio::after {
+            content: '🔊';
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .message-time {
+            font-size: 11px;
+            margin-top: 6px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            resize: none;
+            font-family: inherit;
+            min-height: 50px;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary:disabled {
+            background: #A5D6A7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #F5F5F5;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #EEEEEE;
+        }
+
+        .btn-secondary:disabled {
+            background: #F5F5F5;
+            color: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        .btn-icon {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+        }
+
+        /* Analyze Button */
+        .analyze-section {
+            margin-bottom: 24px;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Processing Animation */
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .processing-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .processing-content {
+            text-align: center;
+            max-width: 400px;
+            padding: 40px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bubble-loader {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .bubble {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: bubbleAnimation 1.4s ease-in-out infinite both;
+        }
+
+        .bubble:nth-child(1) { animation-delay: -0.32s; }
+        .bubble:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bubbleAnimation {
+            0%, 80%, 100% { 
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .progress-loader {
+            width: 100%;
+            height: 6px;
+            background: #F5F5F5;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-loader-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            border-radius: 3px;
+            width: 0%;
+            transition: width 3s linear;
+        }
+
+        .processing-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .processing-subtext {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 999;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status-success {
+            background: #E8F5E9;
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .status-error {
+            background: #FFEBEE;
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .status-info {
+            background: #E3F2FD;
+            color: var(--info);
+            border-left: 4px solid var(--info);
+        }
+
+        .status-warning {
+            background: #FFF8E1;
+            color: var(--warning);
+            border-left: 4px solid var(--warning);
+        }
+
+        /* Audio Indicator */
+        .audio-indicator {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+            z-index: 999;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .audio-indicator.show {
+            opacity: 1;
+        }
+
+        .audio-waves {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 20px;
+        }
+
+        .wave {
+            width: 3px;
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            animation: waveAnimation 1.2s ease-in-out infinite;
+        }
+
+        .wave:nth-child(2) { animation-delay: -0.2s; }
+        .wave:nth-child(3) { animation-delay: -0.4s; }
+        .wave:nth-child(4) { animation-delay: -0.6s; }
+        .wave:nth-child(5) { animation-delay: -0.8s; }
+
+        @keyframes waveAnimation {
+            0%, 100% { height: 40%; }
+            50% { height: 100%; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+                gap: 16px;
+            }
+            
+            header {
+                padding: 16px 20px;
+            }
+            
+            .header-content h1 {
+                font-size: 24px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sensor-card {
+                padding: 16px;
+            }
+            
+            .sensor-value {
+                font-size: 24px;
+            }
+            
+            .chat-section {
+                min-height: 500px;
+            }
+            
+            .chat-messages {
+                padding: 16px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .analyze-btn {
+                padding: 14px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content h1 {
+                font-size: 20px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .sensor-value {
+                font-size: 22px;
+            }
+            
+            .text-input {
+                padding: 12px;
+            }
+            
+            .btn {
+                padding: 10px 14px;
+            }
+            
+            .btn-icon {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .processing-content {
+                padding: 24px;
+                margin: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="processing-overlay" id="processing-overlay">
+        <div class="processing-content">
+            <div class="bubble-loader">
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+            </div>
+            <div class="processing-text" id="processing-text">Analyzing Data</div>
+            <div class="progress-loader">
+                <div class="progress-loader-fill" id="progress-loader-fill"></div>
+            </div>
+            <div class="processing-subtext" id="processing-subtext">Processing your request...</div>
+        </div>
+    </div>
+
+    <div class="status-indicator" id="status-indicator"></div>
+    
+    <div class="audio-indicator" id="audio-indicator">
+        <div class="audio-waves">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+        <span id="audio-text">Playing response</span>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-seedling"></i> <span data-key="main_title">AgroTech Pro</span></h1>
+                <p data-key="subtitle">Smart Agricultural Monitoring System</p>
+            </div>
+            <div class="language-toggle">
+                <button class="language-btn active" data-lang="en">EN</button>
+                <button class="language-btn" data-lang="ta">TA</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2 class="section-title" data-key="dashboard_title">Live Sensor Dashboard</h2>
+                        <button class="refresh-btn" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i>
+                            <span data-key="refresh_btn">Refresh</span>
+                        </button>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="sensor-card">
+                            <div class="sensor-header">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-temperature-high"></i>
+                                </div>
+                                <div class="sensor-info">
+                                    <div class="sensor-title" data-key="temp_title">Temperature</div>
+                                    <div class="sensor-value" id="temp-value">28.3</div>
+                                    <div class="sensor-unit">°C</div>
+                                </div>
+                            </div>
+                            <div class="sensor-status status-optimal">Optimal</div>
+                            <div class="sensor-progress">
+                                <div class="progress-info">
+                                    <span class="progress-label">Level</span>
+                                    <span class="progress-value" id="temp-percentage">70.8%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="temp-progress" style="width: 70.8%; background: #4CAF50;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-header">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="sensor-info">
+                                    <div class="sensor-title" data-key="moisture_title">Soil Moisture</div>
+                                    <div class="sensor-value" id="moisture-value">65.7</div>
+                                    <div class="sensor-unit">%</div>
+                                </div>
+                            </div>
+                            <div class="sensor-status status-optimal">Optimal</div>
+                            <div class="sensor-progress">
+                                <div class="progress-info">
+                                    <span class="progress-label">Level</span>
+                                    <span class="progress-value" id="moisture-percentage">65.7%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="moisture-progress" style="width: 65.7%; background: #4CAF50;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-header">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-atom"></i>
+                                </div>
+                                <div class="sensor-info">
+                                    <div class="sensor-title" data-key="nitrogen_title">Nitrogen Level</div>
+                                    <div class="sensor-value" id="nitrogen-value">52.4</div>
+                                    <div class="sensor-unit">ppm</div>
+                                </div>
+                            </div>
+                            <div class="sensor-status status-warning">Moderate</div>
+                            <div class="sensor-progress">
+                                <div class="progress-info">
+                                    <span class="progress-label">Level</span>
+                                    <span class="progress-value" id="nitrogen-percentage">52.4%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="nitrogen-progress" style="width: 52.4%; background: #FFC107;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-card">
+                            <div class="sensor-header">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-wind"></i>
+                                </div>
+                                <div class="sensor-info">
+                                    <div class="sensor-title" data-key="wind_title">Wind Speed</div>
+                                    <div class="sensor-value" id="wind-value">8.6</div>
+                                    <div class="sensor-unit">km/h</div>
+                                </div>
+                            </div>
+                            <div class="sensor-status status-optimal">Optimal</div>
+                            <div class="sensor-progress">
+                                <div class="progress-info">
+                                    <span class="progress-label">Level</span>
+                                    <span class="progress-value" id="wind-percentage">21.5%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="wind-progress" style="width: 21.5%; background: #4CAF50;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analyze-section">
+                    <button class="analyze-btn" onclick="analyzeData()" data-key="analyze_btn" id="analyze-btn">
+                        <i class="fas fa-chart-line"></i>
+                        Analyze Agricultural Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-section">
+                <div class="chat-header">
+                    <i class="fas fa-robot"></i>
+                    <h2 data-key="assistant_title">AI Agricultural Assistant</h2>
+                </div>
+                <div class="chat-content">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message assistant" data-key="welcome_message">
+                            Welcome! I'm your AI assistant. Click "Analyze Data" or ask me anything about your farm.
+                            <div class="message-time" id="welcome-time"></div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="input-controls">
+                            <textarea class="text-input" id="text-input" data-key-placeholder="text_input_placeholder" placeholder="Ask for advice or analysis..." rows="1"></textarea>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary btn-icon" id="voice-btn" onclick="toggleRecording()">
+                                    <i class="fas fa-microphone"></i>
+                                </button>
+                                <button class="btn btn-primary" id="send-btn" onclick="sendTextMessage()" data-key="send_btn">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- TRANSLATION DATA ---
+        const translations = {
+            en: {
+                main_title: "AgroTech Pro",
+                subtitle: "Smart Agricultural Monitoring System",
+                dashboard_title: "Live Sensor Dashboard",
+                temp_title: "Temperature",
+                moisture_title: "Soil Moisture",
+                nitrogen_title: "Nitrogen Level",
+                wind_title: "Wind Speed",
+                refresh_btn: "Refresh",
+                analyze_btn: "Analyze Agricultural Data",
+                assistant_title: "AI Agricultural Assistant",
+                welcome_message: "Welcome! I'm your AI assistant. Click \"Analyze Data\" or ask me anything about your farm.",
+                text_input_placeholder: "Ask for advice or analysis...",
+                send_btn: "Send",
+                lang_changed: "Language changed to English",
+                analysis_in_progress: "Analyzing data...",
+                ai_thinking: "AI is thinking...",
+                voice_recording: "Recording... Click again to stop.",
+                voice_denied: "Microphone access denied.",
+                connection_online: "Connected to server",
+                connection_offline: "Server offline - Using simulation mode",
+                voice_processing: "Processing voice message...",
+                audio_playing: "Playing response..."
+            },
+            ta: {
+                main_title: "அக்ரோடெக் ப்ரோ",
+                subtitle: "ஸ்மார்ட் விவசாய மானிட்டரிங் சிஸ்டம்",
+                dashboard_title: "நேரடி சென்சார் டாஷ்போர்ட்",
+                temp_title: "வெப்பநிலை",
+                moisture_title: "மண்ணின் ஈரப்பதம்",
+                nitrogen_title: "நைட்ரஜன் அளவு",
+                wind_title: "காற்றின் வேகம்",
+                refresh_btn: "புத்துப்பிக்க",
+                analyze_btn: "விவசாய தரவை பகுப்பாய்வு செய்",
+                assistant_title: "AI விவசாய உதவியாளர்",
+                welcome_message: "வணக்கம்! நான் உங்கள் AI உதவியாளர். \"தரவை பகுப்பாய்வு செய்\" என்பதை கிளிக் செய்யவும் அல்லது உங்கள் பண்ணையை பற்றி எதவும் கேட்கவும்.",
+                text_input_placeholder: "ஆலோசனை அல்லது பகுப்பாய்வு கேட்கவும்...",
+                send_btn: "அனுப்பு",
+                lang_changed: "மொழி தமிழுக்கு மாற்றப்பட்டது",
+                analysis_in_progress: "தரவு பகுப்பாய்வு செய்யப்படுகிறது...",
+                ai_thinking: "AI சிந்தித்து வருகிறது...",
+                voice_recording: "பதிவு செய்யப்படுகிறது... நிறுத்த மீண்டும் கிளிக் செய்யவும்.",
+                voice_denied: "மைக்ரோஃபோன் அனுமதி மறுக்கப்பட்டது.",
+                connection_online: "சர்வருடன் இணைக்கப்பட்டது",
+                connection_offline: "சர்வர் ஆஃப்லைன் - உருவகப்படுத்தல் பயன்படுத்தப்படுகிறது",
+                voice_processing: "குரல் செய்தி பதில் செய்யப்படுகிறது...",
+                audio_playing: "பதில் இசைக்கப்படுகிறது..."
+            }
+        };
+
+        // --- APPLICATION STATE ---
+        let sensorData = {};
+        let currentLanguage = 'en';
+        let speechRecognition;
+        let isRecording = false;
+        let chatHistory = [];
+        let isProcessing = false;
+        let currentAudio = null;
+        
+        // Backend API configuration - Update this for your Vercel deployment
+        const API_BASE_URL = 'https://sih-hackathon-demo.vercel.app/api'; // Replace with your Vercel URL
+        
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSensorData();
+            initializeLanguageControls();
+            initializeTextInput();
+            initializeSpeechRecognition();
+            setLanguage(currentLanguage);
+            checkServerConnection();
+            setInterval(checkServerConnection, 30000);
+            
+            // Set welcome message time
+            document.getElementById('welcome-time').textContent = getCurrentTime();
+        });
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            sensorData.language = lang;
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-key-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-key-placeholder');
+                if (translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+
+            updateLanguageButtons(lang);
+            
+            // Update speech recognition language
+            if (speechRecognition) {
+                speechRecognition.lang = lang === 'ta' ? 'ta-IN' : 'en-US';
+            }
+            
+            showStatus(translations[lang].lang_changed, 'success');
+        }
+
+        function updateLanguageButtons(lang) {
+            const buttons = document.querySelectorAll('.language-btn');
+            buttons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        function initializeLanguageControls() {
+            const languageButtons = document.querySelectorAll('.language-btn');
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.dataset.lang;
+                    setLanguage(lang);
+                });
+            });
+        }
+
+        function initializeTextInput() {
+            const textInput = document.getElementById('text-input');
+            textInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendTextMessage();
+                }
+            });
+
+            textInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        }
+
+        function initializeSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                // Hide voice button if speech recognition is not supported
+                const voiceBtn = document.getElementById('voice-btn');
+                voiceBtn.style.display = 'none';
+                return;
+            }
+            
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.continuous = true;
+            speechRecognition.interimResults = true;
+            speechRecognition.lang = currentLanguage === 'ta' ? 'ta-IN' : 'en-US';
+            
+            let finalTranscript = '';
+            let interimTranscript = '';
+            
+            speechRecognition.onstart = () => {
+                const voiceBtn = document.getElementById('voice-btn');
+                voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                voiceBtn.style.background = '#F44336';
+                voiceBtn.style.color = 'white';
+                showStatus(translations[currentLanguage].voice_recording, 'info');
+            };
+            
+            speechRecognition.onresult = (event) => {
+                interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript = transcript;
+                    }
+                }
+                
+                // Show live transcript in the text input
+                const textInput = document.getElementById('text-input');
+                textInput.value = finalTranscript + interimTranscript;
+                textInput.style.height = 'auto';
+                textInput.style.height = Math.min(textInput.scrollHeight, 120) + 'px';
+            };
+            
+            speechRecognition.onend = () => {
+                isRecording = false;
+                const voiceBtn = document.getElementById('voice-btn');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                voiceBtn.style.background = '';
+                voiceBtn.style.color = '';
+                
+                // Send the final transcript if we have one
+                if (finalTranscript.trim()) {
+                    const textInput = document.getElementById('text-input');
+                    textInput.value = finalTranscript.trim();
+                    sendTextMessage();
+                    finalTranscript = '';
+                }
+            };
+            
+            speechRecognition.onerror = (event) => {
+                isRecording = false;
+                const voiceBtn = document.getElementById('voice-btn');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                voiceBtn.style.background = '';
+                voiceBtn.style.color = '';
+                
+                console.error('Speech recognition error:', event.error);
+                if (event.error === 'not-allowed') {
+                    showStatus(translations[currentLanguage].voice_denied, 'error');
+                } else {
+                    showStatus(`Speech recognition error: ${event.error}`, 'error');
+                }
+            };
+        }
+
+        function initializeSensorData() {
+            // Generate random sensor data on each load
+            sensorData = {
+                temperature: (Math.random() * 25 + 15).toFixed(1), // 15-40°C
+                soilMoisture: (Math.random() * 70 + 30).toFixed(1), // 30-100%
+                nitrogen: (Math.random() * 90 + 10).toFixed(1), // 10-100ppm
+                windSpeed: (Math.random() * 35 + 5).toFixed(1), // 5-40km/h
+                language: currentLanguage
+            };
+            
+            updateSensorDisplay('temp', sensorData.temperature, 40);
+            updateSensorDisplay('moisture', sensorData.soilMoisture, 100);
+            updateSensorDisplay('nitrogen', sensorData.nitrogen, 100);
+            updateSensorDisplay('wind', sensorData.windSpeed, 40);
+        }
+
+        function refreshData() {
+            initializeSensorData();
+            showStatus("Sensor data refreshed", "success");
+        }
+
+        function updateSensorDisplay(type, value, maxValue) {
+            const valueElement = document.getElementById(`${type}-value`);
+            const progressElement = document.getElementById(`${type}-progress`);
+            const percentageElement = document.getElementById(`${type}-percentage`);
+            const statusElement = document.querySelector(`#${type}-value`).closest('.sensor-card').querySelector('.sensor-status');
+            
+            valueElement.textContent = value;
+            const percentage = (value / maxValue) * 100;
+            const roundedPercentage = Math.min(percentage, 100).toFixed(1);
+            
+            percentageElement.textContent = `${roundedPercentage}%`;
+            progressElement.style.width = `${roundedPercentage}%`;
+            
+            // Update status and color based on value ranges
+            let status, statusClass, color;
+            
+            if (type === 'temp') {
+                if (value < 20) {
+                    status = "Cool";
+                    statusClass = "status-warning";
+                    color = "#FFC107";
+                } else if (value > 35) {
+                    status = "Hot";
+                    statusClass = "status-critical";
+                    color = "#F44336";
+                } else {
+                    status = "Optimal";
+                    statusClass = "status-optimal";
+                    color = "#4CAF50";
+                }
+            } else if (type === 'moisture') {
+                if (value < 40) {
+                    status = "Low";
+                    statusClass = "status-critical";
+                    color = "#F44336";
+                } else if (value > 80) {
+                    status = "High";
+                    statusClass = "status-warning";
+                    color = "#FFC107";
+                } else {
+                    status = "Optimal";
+                    statusClass = "status-optimal";
+                    color = "#4CAF50";
+                }
+            } else if (type === 'nitrogen') {
+                if (value < 30) {
+                    status = "Low";
+                    statusClass = "status-critical";
+                    color = "#F44336";
+                } else if (value > 70) {
+                    status = "High";
+                    statusClass = "status-warning";
+                    color = "#FFC107";
+                } else {
+                    status = "Moderate";
+                    statusClass = "status-optimal";
+                    color = "#4CAF50";
+                }
+            } else if (type === 'wind') {
+                if (value > 25) {
+                    status = "Strong";
+                    statusClass = "status-critical";
+                    color = "#F44336";
+                } else if (value < 5) {
+                    status = "Calm";
+                    statusClass = "status-warning";
+                    color = "#FFC107";
+                } else {
+                    status = "Optimal";
+                    statusClass = "status-optimal";
+                    color = "#4CAF50";
+                }
+            }
+            
+            statusElement.textContent = status;
+            statusElement.className = `sensor-status ${statusClass}`;
+            progressElement.style.background = color;
+        }
+
+        // --- CONNECTION MANAGEMENT ---
+        async function checkServerConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`, {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                if (response.ok) {
+                    showConnectionStatus('online');
+                } else {
+                    showConnectionStatus('offline');
+                }
+            } catch (error) {
+                showConnectionStatus('offline');
+            }
+        }
+
+        function showConnectionStatus(status) {
+            const statusEl = document.getElementById('status-indicator');
+            statusEl.className = `status-indicator ${status === 'online' ? 'status-success' : 'status-error'} show`;
+            statusEl.innerHTML = `<i class="fas ${status === 'online' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${translations[currentLanguage][`connection_${status}`]}`;
+            
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- UI & MESSAGING FUNCTIONS ---
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('status-indicator');
+            statusEl.className = `status-indicator ${type === 'success' ? 'status-success' : type === 'error' ? 'status-error' : type === 'warning' ? 'status-warning' : 'status-info'} show`;
+            statusEl.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i> ${message}`;
+            
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 4000);
+        }
+
+        function addMessage(content, sender = 'user', hasAudio = false) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}${hasAudio ? ' has-audio' : ''}`;
+            messageDiv.innerHTML = `${content}<div class="message-time">${getCurrentTime()}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function showProcessingOverlay(message, submessage) {
+            document.getElementById('processing-text').textContent = message;
+            document.getElementById('processing-subtext').textContent = submessage;
+            document.getElementById('processing-overlay').classList.add('active');
+            
+            // Animate progress bar
+            const progressBar = document.getElementById('progress-loader-fill');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 50);
+        }
+
+        function hideProcessingOverlay() {
+            document.getElementById('processing-overlay').classList.remove('active');
+        }
+
+        function setUIState(processing) {
+            isProcessing = processing;
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const sendBtn = document.getElementById('send-btn');
+            const voiceBtn = document.getElementById('voice-btn');
+            const textInput = document.getElementById('text-input');
+            
+            analyzeBtn.disabled = processing;
+            sendBtn.disabled = processing;
+            voiceBtn.disabled = processing || isRecording;
+            textInput.disabled = processing;
+        }
+
+        // --- AUDIO FUNCTIONS ---
+        function showAudioIndicator(show = true) {
+            const indicator = document.getElementById('audio-indicator');
+            if (show) {
+                indicator.classList.add('show');
+                document.getElementById('audio-text').textContent = translations[currentLanguage].audio_playing;
+            } else {
+                indicator.classList.remove('show');
+            }
+        }
+
+        function playBase64Audio(base64Data) {
+            return new Promise((resolve, reject) => {
+                try {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio = null;
+                    }
+
+                    let audioSrc;
+                    if (base64Data.startsWith('data:audio')) {
+                        audioSrc = base64Data;
+                    } else {
+                        audioSrc = `data:audio/mp3;base64,${base64Data}`;
+                    }
+
+                    const audio = new Audio(audioSrc);
+                    currentAudio = audio;
+                    
+                    showAudioIndicator(true);
+                    
+                    audio.onended = () => {
+                        showAudioIndicator(false);
+                        currentAudio = null;
+                        resolve();
+                    };
+                    
+                    audio.onerror = (error) => {
+                        showAudioIndicator(false);
+                        currentAudio = null;
+                        console.error('Audio playback error:', error);
+                        reject(error);
+                    };
+                    
+                    audio.play().catch(error => {
+                        showAudioIndicator(false);
+                        currentAudio = null;
+                        console.error('Audio play failed:', error);
+                        reject(error);
+                    });
+                    
+                } catch (error) {
+                    showAudioIndicator(false);
+                    console.error('Audio setup error:', error);
+                    reject(error);
+                }
+            });
+        }
+
+        async function handleAudioResponse(audioData, messageContent) {
+            if (audioData) {
+                try {
+                    await playBase64Audio(audioData);
+                    const messages = document.querySelectorAll('.message.assistant');
+                    const lastMessage = messages[messages.length - 1];
+                    if (lastMessage) {
+                        lastMessage.classList.add('has-audio');
+                    }
+                } catch (error) {
+                    console.error('Failed to play audio:', error);
+                    showStatus('Audio playback failed', 'error');
+                }
+            }
+        }
+
+        // --- VOICE RECOGNITION ---
+        async function toggleRecording() {
+            if (isProcessing) return;
+            
+            if (!speechRecognition) {
+                showStatus('Speech recognition not supported in this browser. Please use Chrome.', 'error');
+                return;
+            }
+            
+            if (!isRecording) {
+                try {
+                    isRecording = true;
+                    speechRecognition.start();
+                } catch (error) {
+                    console.error('Speech recognition start error:', error);
+                    isRecording = false;
+                    showStatus('Failed to start speech recognition', 'error');
+                }
+            } else {
+                speechRecognition.stop();
+            }
+        }
+
+        // --- CORE FUNCTIONALITY ---
+        async function analyzeData() {
+            if (isProcessing) return;
+            
+            setUIState(true);
+            showProcessingOverlay(translations[currentLanguage].analysis_in_progress, "Processing sensor data...");
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        role: 'user',
+                        content: `Current agricultural sensor data for analysis: Temperature: ${sensorData.temperature}°C, Soil Moisture: ${sensorData.soilMoisture}%, Nitrogen Level: ${sensorData.nitrogen}ppm, Wind Speed: ${sensorData.windSpeed}km/h. Please recommend suitable crops with expected investment and returns.`,
+                        language: currentLanguage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                hideProcessingOverlay();
+                setUIState(false);
+                
+                chatHistory = [
+                    {
+                        role: 'user',
+                        content: 'Analysis requested for sensor data'
+                    },
+                    {
+                        role: 'assistant',
+                        content: data.response
+                    }
+                ];
+
+                addMessage(data.response, 'assistant', !!data.audio);
+                
+                if (data.audio) {
+                    await handleAudioResponse(data.audio, data.response);
+                }
+                
+            } catch (error) {
+                console.error('Analysis API error:', error);
+                hideProcessingOverlay();
+                setUIState(false);
+                const fallbackAnalysis = generateFallbackAnalysis();
+                addMessage(fallbackAnalysis, 'assistant');
+                showStatus('Analysis failed - using simulation', 'error');
+            }
+        }
+        
+        async function sendTextMessage() {
+            const textInput = document.getElementById('text-input');
+            const message = textInput.value.trim();
+            if (!message || isProcessing) return;
+
+            setUIState(true);
+            addMessage(message, 'user');
+            textInput.value = '';
+            textInput.style.height = 'auto';
+            showProcessingOverlay(translations[currentLanguage].ai_thinking, "Generating response...");
+
+            chatHistory.push({
+                role: 'user',
+                content: message
+            });
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chatHistory: chatHistory,
+                        language: currentLanguage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                hideProcessingOverlay();
+                setUIState(false);
+                
+                chatHistory.push({
+                    role: 'assistant',
+                    content: data.response
+                });
+
+                addMessage(data.response, 'assistant', !!data.audio);
+                
+                if (data.audio) {
+                    await handleAudioResponse(data.audio, data.response);
+                }
+                
+            } catch (error) {
+                console.error('Chat API error:', error);
+                hideProcessingOverlay();
+                setUIState(false);
+                const fallbackResponse = generateFallbackResponse(message);
+                addMessage(fallbackResponse, 'assistant');
+                showStatus('Chat failed - using simulation', 'error');
+            }
+        }
+
+        // --- FALLBACK/SIMULATION LOGIC ---
+        function generateFallbackAnalysis() {
+            const temp = parseFloat(sensorData.temperature);
+            const moisture = parseFloat(sensorData.soilMoisture);
+            const nitrogen = parseFloat(sensorData.nitrogen);
+            const wind = parseFloat(sensorData.windSpeed);
+            
+            let analysis = `Based on current conditions: Temperature ${temp}°C, Soil Moisture ${moisture}%, Nitrogen ${nitrogen}ppm, Wind ${wind}km/h. `;
+            
+            if (currentLanguage === 'ta') {
+                analysis = `தற்போதைய நிலைமைகளின் அடிப்படையில்: வெப்பநிலை ${temp}°C, மண் ஈரப்பதம் ${moisture}%, நைட்ரஜன் ${nitrogen}ppm, காற்று ${wind}km/h. `;
+            }
+            
+            // Add crop recommendations based on conditions
+            if (temp >= 25 && moisture >= 60) {
+                analysis += currentLanguage === 'ta' 
+                    ? "அரிசி மற்றும் கரும்பு சாகுபடி பரிந்துரைக்கப்படுகிறது. முதலீடு: ₹30,000-50,000, எதிர்பார்க்கும் வருமானம்: ₹80,000-1,20,000."
+                    : "Rice and sugarcane cultivation recommended. Investment: ₹30,000-50,000, Expected returns: ₹80,000-1,20,000.";
+            } else if (temp >= 20 && moisture >= 40) {
+                analysis += currentLanguage === 'ta'
+                    ? "தக்காளி மற்றும் வெங்காயம் பயிரிடலாம். முதலீடு: ₹20,000-35,000, எதிர்பார்க்கும் வருமானம்: ₹60,000-90,000."
+                    : "Tomato and onion cultivation suitable. Investment: ₹20,000-35,000, Expected returns: ₹60,000-90,000.";
+            } else {
+                analysis += currentLanguage === 'ta'
+                    ? "வேர்க்கடலை மற்றும் சூரியகாந்தி பரிந்துரைக்கப்படுகிறது. முதலீடு: ₹15,000-25,000, எதிர்பார்க்கும் வருமானம்: ₹40,000-65,000."
+                    : "Groundnut and sunflower recommended. Investment: ₹15,000-25,000, Expected returns: ₹40,000-65,000.";
+            }
+            
+            return analysis;
+        }
+        
+        function generateFallbackResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            
+            if (lowerMessage.includes('temperature') || lowerMessage.includes('வெப்பநிலை')) {
+                return currentLanguage === 'ta' 
+                    ? `தற்போதைய வெப்பநிலை ${sensorData.temperature}°C ஆகும். ${getTemperatureAdvice()}`
+                    : `Current temperature is ${sensorData.temperature}°C. ${getTemperatureAdvice()}`;
+            }
+            
+            if (lowerMessage.includes('moisture') || lowerMessage.includes('ஈரப்பதம்')) {
+                return currentLanguage === 'ta'
+                    ? `மண் ஈரப்பதம் ${sensorData.soilMoisture}% ஆகும். ${getMoistureAdvice()}`
+                    : `Soil moisture is ${sensorData.soilMoisture}%. ${getMoistureAdvice()}`;
+            }
+            
+            if (lowerMessage.includes('nitrogen') || lowerMessage.includes('நைட்ரஜன்')) {
+                return currentLanguage === 'ta'
+                    ? `நைட்ரஜன் அளவு ${sensorData.nitrogen}ppm ஆகும். ${getNitrogenAdvice()}`
+                    : `Nitrogen level is ${sensorData.nitrogen}ppm. ${getNitrogenAdvice()}`;
+            }
+            
+            if (lowerMessage.includes('wind') || lowerMessage.includes('காற்று')) {
+                return currentLanguage === 'ta'
+                    ? `காற்றின் வேகம் ${sensorData.windSpeed}km/h ஆகும். ${getWindAdvice()}`
+                    : `Wind speed is ${sensorData.windSpeed}km/h. ${getWindAdvice()}`;
+            }
+            
+            return currentLanguage === 'ta'
+                ? `உங்கள் கேள்வி புரிந்துகொள்ளப்பட்டது. தற்போதைய தரவுகளின் அடிப்படையில், வழக்கமான கண்காணிப்பு பரிந்துரைக்கப்படுகிறது.`
+                : `I understand your question about "${userMessage}". Based on current data, regular monitoring of all parameters is recommended for optimal crop health.`;
+        }
+
+        function getTemperatureAdvice() {
+            const temp = parseFloat(sensorData.temperature);
+            if (temp < 20) {
+                return currentLanguage === 'ta' 
+                    ? "சில பயிர்களுக்கு சற்று குளிர்ச்சியாக உள்ளது."
+                    : "Slightly cool for some crops.";
+            }
+            if (temp > 35) {
+                return currentLanguage === 'ta'
+                    ? "அதிக வெப்பம், நல்ல நீர்ப்பாசனம் அவசியம்."
+                    : "High heat, ensure good irrigation.";
+            }
+            return currentLanguage === 'ta'
+                ? "பெரும்பாலான பயிர்களுக்கு சிறந்த வெப்பநிலை."
+                : "Optimal range for most crops.";
+        }
+
+        function getMoistureAdvice() {
+            const moisture = parseFloat(sensorData.soilMoisture);
+            if (moisture < 40) {
+                return currentLanguage === 'ta'
+                    ? "குறைவு. நீர்ப்பாசனம் பரிந்துரைக்கப்படுகிறது."
+                    : "Low. Irrigation recommended.";
+            }
+            if (moisture > 80) {
+                return currentLanguage === 'ta'
+                    ? "மிக அதிகம். வடிகால் சரிபார்க்கவும்."
+                    : "Very high. Check drainage.";
+            }
+            return currentLanguage === 'ta'
+                ? "நல்ல ஈரப்பத அளவு."
+                : "Good moisture level.";
+        }
+
+        function getNitrogenAdvice() {
+            const nitrogen = parseFloat(sensorData.nitrogen);
+            if (nitrogen < 30) {
+                return currentLanguage === 'ta'
+                    ? "குறைவு. உரமிடுதல் பரிந்துரைக்கப்படுகிறது."
+                    : "Low. Fertilization recommended.";
+            }
+            if (nitrogen > 70) {
+                return currentLanguage === 'ta'
+                    ? "அதிகம். இலை வளர்ச்சிக்கு ஏற்றது."
+                    : "High. Suitable for leafy growth.";
+            }
+            return currentLanguage === 'ta'
+                ? "மிதமான மற்றும் ஆரோக்கியமான அளவு."
+                : "Moderate and healthy level.";
+        }
+
+        function getWindAdvice() {
+            const wind = parseFloat(sensorData.windSpeed);
+            if (wind > 25) {
+                return currentLanguage === 'ta'
+                    ? "வலுவான காற்று. பயிர் பாதுகாப்பு தேவையாக இருக்கலாம்."
+                    : "Strong wind. May need crop protection.";
+            }
+            return currentLanguage === 'ta'
+                ? "லேசான முதல் மிதமான காற்று, சிறந்த நிலைமை."
+                : "Light to moderate breeze, ideal conditions.";
+        }
+    </script>
+</body>
+</html>
